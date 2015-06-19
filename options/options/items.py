@@ -11,8 +11,7 @@ import scrapy
 class OptionsItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    date = scrapy.Field()
-    time = scrapy.Field()
+    dateTimeUpdated = scrapy.Field()
     stockName = scrapy.Field()
     currentPrice = scrapy.Field()
     strikePrice = scrapy.Field()
