@@ -1,0 +1,1880 @@
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>NSE - National Stock Exchange of India Ltd.</title>
+<script type="text/javascript">
+var page=["livewth_optch","liveMarket"];
+</script>
+
+<script type="text/javascript" src="/common/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="/common/js/mainNav.js"></script>
+<script type="text/javascript" src="/common/js/js.js"></script>
+<!--date util -->
+<script type="text/javascript" src="/live_market/resources/js/date.js"></script>
+
+<link href="/common/css/style.css" rel="stylesheet" type="text/css" />
+<link href="/live_market/resources/css/live_market.css" rel="stylesheet" type="text/css" />
+
+
+<link rel="stylesheet" type="text/css" href="/common/css/skin.css" />
+<link rel="shortcut icon" type="image/x-icon" href="/common/images/favicon.ico" />
+
+
+<!--[if IE 8]>
+<link href="/common/css/ie8.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<!--[if IE 7]>
+<link href="/common/css/ie7.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<!--[if IE 6]>
+<link href="/common/css/ie6.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+<!--<script type="text/javascript" src="/common/js/js.js"></script>-->
+<!-- <link rel="shortcut icon" type="image/x-icon" href="/common/images/favicon.ico" /> -->
+<script language="javascript" src="/js/commonfuncs_homepage.js"></script>
+<script language="javascript" src="/js/sym_map/symbolMap.js"></script>
+
+<script type="text/javascript">
+var isIE=(document.all)?1:0;
+var isNS4=(document.layers)?1:0;
+var isNS6=((document.getElementById)&&(navigator.appName=='Netscape'))?1:0;
+var isNS=((isNS4)||(isNS6))?1:0;
+var DHTML=(isIE||isNS4||isNS6)?1:0;
+//capEvents();
+
+function refresh()
+{
+	window.location.reload(true);
+}
+
+function validateForm()
+{
+	var date = document.getElementById("date").value;
+	if(date == "select")
+	{
+		alert("Please select Expiry date");
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+function goBtnClick(strSymbol)
+{
+
+	//alert(strSymbol);
+	if(strSymbol == "index")
+	{	
+		var sym = document.ocForm.symbol.value = $("#optnContract").val();
+		if(sym == "select")
+		{
+			alert("Please select underlying Indices");
+			
+			return false;
+		}		
+		else
+		{	
+			if (sym.indexOf('%26')>=0){
+					location.href = '/marketinfo/sym_map/symbolMapping.jsp?symbol='+sym+'&instrument=OPTIDX&date=-&segmentLink=17';
+				}
+				else{
+			//alert('/marketinfo/sym_map/symbolMapping.jsp?symbol='+sym+'&instrument=OPTIDX&date=-&segmentLink=17');
+				location.href = '/marketinfo/sym_map/symbolMapping.jsp?symbol='+escape(sym)+'&instrument=OPTIDX&date=-&segmentLink=17';
+				}
+		}	
+	}
+	if(strSymbol == "stock")
+	{	
+		var sym = $("#underlyStock").val();
+		sym = trimSpaces(sym);
+		if(sym=="Search for an underlying stock:")
+		{
+			alert("Please Enter underlying stock");
+		}
+		else	
+		{
+			if(sym.length<2)
+			{
+				alert("Please enter more than 2 character in underlying stock");
+			}
+			else
+			{	
+				var instru = document.ocForm.instrument.value;
+					location.href = '/marketinfo/sym_map/symbolMapping.jsp?symbol='+escape(sym)+'&instrument=OPTSTK&date=-&segmentLink=17';
+			}	
+		}
+	}
+}
+//capEvents();
+function popup ( url ) {
+    chartpopup = window.open( url,'chartspopup','location=no,menubar=no,toolbar=no,resizable=no,status=yes,width=780,height=500,scrollbars=yes,screenX=0,screenY=0,left=0,top=0');
+    chartpopup.focus();
+}
+function chartPopup(symbl, instrumen, dat, strke, calOrput, mainSymbol ){
+	var dFormat = "ddNNNyyyy";
+		var startDate = new Date(getDateFromFormat(dat,dFormat));
+		var tameDate = formatDate(startDate,'dd-MM-yyyy');
+	var url="/charts/webtame/webchart.jsp?OISymbol="+escape(mainSymbol)+"&CDSymbol="+escape(symbl)+"&Segment=FO&Instrument="+instrumen+"&Series=EQ&CDExpiryMonth=&FOExpiryMonth="+tameDate+"&IRFExpiryMonth=&CDDate1=&CDDate2=&PeriodType=2&Periodicity=1&StrikePrice="+strke+"&OptionType="+calOrput+"&Template=fo_options_Intrday.jsp";
+	popup ( url );
+	
+}
+
+function popup1 ( symbl,instrumen,dat,strke,calOrput ) {
+	symbl=encodeURIComponent(symbl);
+	instrumen=encodeURIComponent(instrumen);
+	dat=encodeURIComponent(dat);
+	strke=encodeURIComponent(strke);
+	calOrput=encodeURIComponent(calOrput);
+    url="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying="+symbl+"&instrument="+instrumen+"&expiry="+dat+"&type="+calOrput+"&strike="+strke
+    printpopup = window.open( url,'printpopup','location=no,menubar=yes,toolbar=no,resizable=yes,scrollbars=yes,status=yes,maximizable=true,screenX=0,screenY=0,left=0,top=0');printpopup.focus();
+    //location.href = url;
+}
+function submitRequest(symbol,instrument)
+{
+	var date = document.optionChain.expirydate.options[document.optionChain.expirydate.selectedIndex].value;
+	//alert(date);
+	//location.href = '/marketinfo/fo/optionKeys.jsp?symbol='+symbol+'&instrument='+instrument+'&date='+date;
+	location.href = '/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol='+symbol+'&instrument='+instrument+'&date='+date;
+}
+</script>
+<style>
+.tphead {
+    color: #EF620D;
+    padding: 0;
+}
+
+.srchpnl, .srchpnl2 {
+    font-size: 1.1em;
+    margin: 10px 0 0;
+}
+</style>
+</head>
+<body>
+
+ 
+<!--<form name="ocForm" id="ocForm" action="/marketinfo/sym_map/symbolMapping.jsp" method="get" onsubmit="return validate()" ><a name="top"></a> -->
+
+<body >
+<div id="container"> 
+	<!--Wrapper Start-->
+	<div id="wrapper"> 
+		
+		<!--Main Menu Start-->
+		<div id="main_menu"> </div>
+		<!--Main Menu End--> 
+	</div>
+	<div class="clear"></div>
+	<!--Wrapper End--> 
+	<!-- Content Big Start -->
+	<div class="content_big">
+		<div class="black_overlay" style="display:none"></div>
+		<div id="wrapper_btm">
+			<div class="main_content">
+				<div id="breadcrumb"></div></div>
+			<!-- Main Content Start-->
+						<br>
+				<table width="100%"><tr><td>
+				<div class="tphead"><h2>Option Chain (Equity Derivatives)</h2></div>
+				</td><td align="right">
+				<div style="float:right; font-size:1.2em;">
+
+				
+				<span >Underlying Stock: <b style="font-size:1.2em;">RELIANCE 997.15</b>&nbsp;</span>
+				
+				<span>As on Jun 19, 2015 15:30:36 IST<a> <img src="/live_market/resources/images/refressbtn.gif" onclick="refresh();" style="cursor: pointer" title="refresh" /></a></span></div>
+				</td></tr></table>
+				<div class="srchpnl" style="padding:2px 0 2px 5px;height:25px;">
+				
+				<b>View Options Contracts for:</b> <span>
+					<select style="width:100px"  id="optnContract" name="optnContract" onchange="goBtnClick('index');" class="goodTextBox">					
+					<option value="select" selected>Select Index</option>
+					
+						
+									
+									<option  value="NIFTY" >NIFTY</option>
+							
+									
+									<option  value="CNXINFRA" >CNXINFRA</option>
+							
+									
+									<option  value="CNXIT" >CNXIT</option>
+							
+									
+									<option  value="CNXPSE" >CNXPSE</option>
+							
+									
+									<option  value="BANKNIFTY" >BANKNIFTY</option>
+							
+									
+									<option  value="NFTYMCAP50" >NFTYMCAP50</option>
+							
+									
+									<option  value="S&P500" >S&P500</option>
+							
+									
+									<option  value="FTSE100" >FTSE100</option>
+							
+						</select>
+					</span>
+					<!--<div><input type="image" src="/live_market/resources/images/gobtn.gif" onclick="goBtnClick('index');" style="cursor: pointer"/>
+					</div>Sonal-->
+					<b>OR</b> <span>
+					<input style="width:170px" type="text" id="underlyStock" class="txtinp" style="text-transform:uppercase" value="Search for an underlying stock:" onfocus="if(this.value=='Search for an underlying stock:')this.value=''" onblur="if(this.value=='')this.value='Search for an underlying stock:'" onkeyup="if(event.keyCode==13){goBtnClick('stock');return false;}" />
+					</span>
+					<div>
+						<input type="image" src="/live_market/resources/images/gobtn.gif" onclick="goBtnClick('stock');" style="cursor: pointer"/>
+					</div>
+					
+					<form name="ocForm" id="ocForm"  onsubmit="return validateForm()" style="margin-top:0px;"><a name="top" ></a>
+						<input type="hidden" name="segmentLink" id="segmentLink" value="17" /> 
+						<input type="hidden" name="instrument" id="instrument" value="OPTSTK">
+						<input type="hidden" name="symbol" id="symbol" value="RELIANCE">
+				<b>Filter by:</b><span> Expiry Date
+					<select style="width:100px" id="date" name="date" onchange="document.forms['ocForm'].submit();" class="goodTextBox">
+						
+						<option value="select"> Select </option>
+						
+						
+						
+								<option  value="25JUN2015" selected>25JUN2015</option>
+					
+						
+								<option  value="30JUL2015" >30JUL2015</option>
+					
+						
+								<option  value="27AUG2015" >27AUG2015</option>
+					
+							
+					</select>			
+					</span>
+					</form>						
+					 <div style="width:110px;padding: 5px 10px;font-size: 1.1em;font-weight:bold;float: right;"><a href="/live_market/dynaContent/live_watch/fomwatchsymbol.jsp?key=RELIANCE&Fut_Opt=Futures">Futures contracts</a></div>
+					
+				</div>
+				
+				
+				<table width="100%">
+				<tr ></tr>
+		
+				<tr ><td height="8"> </td></tr>
+				</table>
+				
+				
+				<div class="opttbldata">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<th colspan="11">CALLS</th>
+							<th>&nbsp;</th>
+							<th colspan="11">PUTS</th>
+						</tr>
+						<tr>
+							<!-- <th>Quote </th>   -->
+							<th title="Chart">Chart</th>
+							<th title="Open Interest">OI</th>
+							<th title="Change in Open Interest">Chng in OI</th>
+							<th title="Traded Volume">Volume</th>
+							<th title="Implied Volatility">IV</th>
+							<th title="Last Traded Price">LTP</th>
+							<!--**-->
+							<th title="Net Change">Net Chng</th>
+							
+							<th title="Bid Quantity">Bid<br>Qty</th>
+							<th title="Bid Price">Bid<br>Price</th>
+							<th title="Ask Price">Ask<br>Price</th>
+							<th title="Ask Quantity">Ask<br>Qty</th>
+							<th title="Strike Price">Strike Price</th>
+							<th title="Bid Quantity">Bid<br>Qty</th>
+							<th title="Bid Price">Bid<br>Price</th>
+							<th title="Ask Price">Ask<br>Price</th>
+							<th title="Ask Quantity">Ask<br>Qty</th>
+							<th title="Net Change">Net Chng</th>							
+							<th title="Last Traded Price">LTP</th>
+							<th title="Implied Volatility">IV</th>
+							<th title="Traded Volume">Volume</th>	
+							<th title="Change in Open Interest">Chng in OI</th>
+							<th title="Open Interest">OI</th>
+							<th title="Chart">Chart</th>
+						</tr>
+							
+									
+						<tr>
+
+	<!--<td><img src="/images/print3.gif"></td>-->
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '720.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+							-
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Black;">-</td>
+							
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=720.00"><b>720.00</b></a></td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg"> 1.00</td>
+							<td class="nobg"> 250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Black;">-</td>
+							
+							
+							<td class="nobg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+						
+							<td class="nobg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '720.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><img src="/images/print3.gif"></td>-->
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '740.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+							-
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Black;">-</td>
+							
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=740.00"><b>740.00</b></a></td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg"> 1.00</td>
+							<td class="nobg"> 250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Black;">-</td>
+							
+							
+							<td class="nobg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+						
+							<td class="nobg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '740.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '760.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=760.00&type=CE&expiry=25JUN2015" target="_blank"> 134.00</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Black;">-</td>
+							
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=760.00"><b>760.00</b></a></td>
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 0.05</td>
+							<td class="nobg"> 0.50</td>
+							<td class="nobg"> 250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Black;">-</td>
+							
+							
+							<td class="nobg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+						
+							<td class="nobg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '760.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><img src="/images/print3.gif"></td>-->
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '780.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+							-
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Black;">-</td>
+							
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=780.00"><b>780.00</b></a></td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg"> 0.10</td>
+							<td class="nobg"> 250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Black;">-</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','780.00','PE')"> 0.05</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=780.00&type=PE&expiry=25JUN2015" target="_blank"> 0.05</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+						
+							<td class="nobg"> 2,000</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '780.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '800.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 1,750</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=800.00&type=CE&expiry=25JUN2015" target="_blank"> 130.00</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Black;">-</td>
+							
+							<td class="ylwbg"> 500</td>
+							<td class="ylwbg"> 174.65</td>
+							<td class="ylwbg"> 209.15</td>
+							<td class="ylwbg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=800.00"><b>800.00</b></a></td>
+							<td class="nobg"> 8,500</td>
+							<td class="nobg"> 0.05</td>
+							<td class="nobg"> 0.40</td>
+							<td class="nobg"> 2,250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -0.15</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','800.00','PE')"> 0.05</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=800.00&type=PE&expiry=25JUN2015" target="_blank"> 0.05</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 61.39</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 4</td>
+							<td class="nobg"> -1,000</td>
+						
+							<td class="nobg"> 38,250</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '800.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '820.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 4</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=820.00&type=CE&expiry=25JUN2015" target="_blank"> 175.05</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 111.90</td>
+							
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 175.95</td>
+							<td class="ylwbg"> 182.80</td>
+							<td class="ylwbg"> 2,500</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=820.00"><b>820.00</b></a></td>
+							<td class="nobg"> 500</td>
+							<td class="nobg"> 0.10</td>
+							<td class="nobg"> 0.25</td>
+							<td class="nobg"> 750</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -0.05</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','820.00','PE')"> 0.20</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=820.00&type=PE&expiry=25JUN2015" target="_blank"> 0.20</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 64.03</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 13</td>
+							<td class="nobg"> -750</td>
+						
+							<td class="nobg"> 86,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '820.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '840.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 14,500</td>
+							<td class="ylwbg">-</td>
+							<td class="ylwbg"> 29</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg"> 89.23</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=840.00&type=CE&expiry=25JUN2015" target="_blank"> 161.50</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 21.50</td>
+							
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 154.10</td>
+							<td class="ylwbg"> 160.40</td>
+							<td class="ylwbg"> 1,750</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=840.00"><b>840.00</b></a></td>
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 0.10</td>
+							<td class="nobg"> 0.30</td>
+							<td class="nobg"> 2,500</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Green;"> 0.20</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','840.00','PE')"> 0.40</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=840.00&type=PE&expiry=25JUN2015" target="_blank"> 0.40</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 62.50</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 49</td>
+							<td class="nobg"> -250</td>
+						
+							<td class="nobg"> 283,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '840.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '860.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 11,000</td>
+							<td class="ylwbg"> -4,750</td>
+							<td class="ylwbg"> 25</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg"> 55.78</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=860.00&type=CE&expiry=25JUN2015" target="_blank"> 139.00</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 20.65</td>
+							
+							<td class="ylwbg"> 750</td>
+							<td class="ylwbg"> 137.65</td>
+							<td class="ylwbg"> 140.55</td>
+							<td class="ylwbg"> 1,750</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=860.00"><b>860.00</b></a></td>
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 0.25</td>
+							<td class="nobg"> 0.40</td>
+							<td class="nobg"> 10,500</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -0.05</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','860.00','PE')"> 0.25</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=860.00&type=PE&expiry=25JUN2015" target="_blank"> 0.25</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 51.58</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 136</td>
+							<td class="nobg"> -13,250</td>
+						
+							<td class="nobg"> 245,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '860.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '880.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 70,000</td>
+							<td class="ylwbg"> -17,750</td>
+							<td class="ylwbg"> 83</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=880.00&type=CE&expiry=25JUN2015" target="_blank"> 116.00</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 17.65</td>
+							
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 118.00</td>
+							<td class="ylwbg"> 120.80</td>
+							<td class="ylwbg"> 1,500</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=880.00"><b>880.00</b></a></td>
+							<td class="nobg"> 1,000</td>
+							<td class="nobg"> 0.35</td>
+							<td class="nobg"> 0.40</td>
+							<td class="nobg"> 10,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -0.25</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','880.00','PE')"> 0.35</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=880.00&type=PE&expiry=25JUN2015" target="_blank"> 0.35</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 46.74</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 844</td>
+							<td class="nobg"> -79,750</td>
+						
+							<td class="nobg"> 453,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '880.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '900.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 456,750</td>
+							<td class="ylwbg"> -76,500</td>
+							<td class="ylwbg"> 595</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg">-</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=900.00&type=CE&expiry=25JUN2015" target="_blank"> 98.20</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 20.60</td>
+							
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 98.10</td>
+							<td class="ylwbg"> 99.00</td>
+							<td class="ylwbg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=900.00"><b>900.00</b></a></td>
+							<td class="nobg"> 500</td>
+							<td class="nobg"> 0.40</td>
+							<td class="nobg"> 0.45</td>
+							<td class="nobg"> 7,250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -0.50</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','900.00','PE')"> 0.40</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=900.00&type=PE&expiry=25JUN2015" target="_blank"> 0.40</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 40.33</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 2,201</td>
+							<td class="nobg"> -161,750</td>
+						
+							<td class="nobg"> 766,250</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '900.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '920.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 410,750</td>
+							<td class="ylwbg"> -60,500</td>
+							<td class="ylwbg"> 641</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg"> 26.70</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=920.00&type=CE&expiry=25JUN2015" target="_blank"> 78.75</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 19.85</td>
+							
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 78.30</td>
+							<td class="ylwbg"> 79.00</td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=920.00"><b>920.00</b></a></td>
+							<td class="nobg"> 1,000</td>
+							<td class="nobg"> 0.50</td>
+							<td class="nobg"> 0.65</td>
+							<td class="nobg"> 250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -1.10</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','920.00','PE')"> 0.55</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=920.00&type=PE&expiry=25JUN2015" target="_blank"> 0.55</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 34.82</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 2,172</td>
+							<td class="nobg"> -56,750</td>
+						
+							<td class="nobg"> 576,250</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '920.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '940.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 635,500</td>
+							<td class="ylwbg"> -110,250</td>
+							<td class="ylwbg"> 1,473</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg"> 28.85</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=940.00&type=CE&expiry=25JUN2015" target="_blank"> 59.45</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 19.20</td>
+							
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 59.00</td>
+							<td class="ylwbg"> 59.80</td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=940.00"><b>940.00</b></a></td>
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 1.10</td>
+							<td class="nobg"> 1.50</td>
+							<td class="nobg"> 1,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -2.40</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','940.00','PE')"> 1.15</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=940.00&type=PE&expiry=25JUN2015" target="_blank"> 1.15</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 31.57</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 6,246</td>
+							<td class="nobg"> 67,000</td>
+						
+							<td class="nobg"> 883,750</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '940.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '960.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 297,250</td>
+							<td class="ylwbg"> -117,500</td>
+							<td class="ylwbg"> 2,187</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg"> 27.18</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=960.00&type=CE&expiry=25JUN2015" target="_blank"> 40.90</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 15.55</td>
+							
+							<td class="ylwbg"> 500</td>
+							<td class="ylwbg"> 40.60</td>
+							<td class="ylwbg"> 41.50</td>
+							<td class="ylwbg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=960.00"><b>960.00</b></a></td>
+							<td class="nobg"> 1,250</td>
+							<td class="nobg"> 2.75</td>
+							<td class="nobg"> 2.90</td>
+							<td class="nobg"> 1,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -5.15</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','960.00','PE')"> 2.80</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=960.00&type=PE&expiry=25JUN2015" target="_blank"> 2.80</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 29.46</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 9,792</td>
+							<td class="nobg"> 73,750</td>
+						
+							<td class="nobg"> 704,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '960.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '980.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="ylwbg"> 516,250</td>
+							<td class="ylwbg"> -308,750</td>
+							<td class="ylwbg"> 8,004</td>
+							<!-- Added By Swapnil IV-->
+							<td class="ylwbg"> 26.95</td>
+							<!-- End-->
+							<td class="ylwbg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=980.00&type=CE&expiry=25JUN2015" target="_blank"> 25.00</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="ylwbg" Style="color:Green;"> 10.95</td>
+							
+							<td class="ylwbg"> 3,000</td>
+							<td class="ylwbg"> 25.00</td>
+							<td class="ylwbg"> 25.10</td>
+							<td class="ylwbg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=980.00"><b>980.00</b></a></td>
+							<td class="nobg"> 3,000</td>
+							<td class="nobg"> 6.20</td>
+							<td class="nobg"> 6.40</td>
+							<td class="nobg"> 1,250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="nobg" Style="color:Red;"> -9.60</td>
+							
+							
+							<td class="nobg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','980.00','PE')"> 6.30</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=980.00&type=PE&expiry=25JUN2015" target="_blank"> 6.30</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="nobg"> 27.08</td>
+							<!-- End Added By Swapnil -->
+							<td class="nobg"> 13,752</td>
+							<td class="nobg"> 392,250</td>
+						
+							<td class="nobg"> 618,000</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '980.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1000.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 1,109,500</td>
+							<td class="nobg"> 68,250</td>
+							<td class="nobg"> 25,301</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 25.07</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1000.00&type=CE&expiry=25JUN2015" target="_blank"> 12.20</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Green;"> 5.30</td>
+							
+							<td class="nobg"> 1,000</td>
+							<td class="nobg"> 12.40</td>
+							<td class="nobg"> 12.50</td>
+							<td class="nobg"> 1,000</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1000.00"><b>1000.00</b></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 13.30</td>
+							<td class="ylwbg"> 13.70</td>
+							<td class="ylwbg"> 500</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Red;"> -15.15</td>
+							
+							
+							<td class="ylwbg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','1000.00','PE')"> 13.35</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1000.00&type=PE&expiry=25JUN2015" target="_blank"> 13.35</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg"> 24.96</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg"> 4,897</td>
+							<td class="ylwbg"> 203,750</td>
+						
+							<td class="ylwbg"> 325,250</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1000.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1020.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 470,750</td>
+							<td class="nobg"> 268,250</td>
+							<td class="nobg"> 11,068</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 26.26</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1020.00&type=CE&expiry=25JUN2015" target="_blank"> 5.50</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Green;"> 2.50</td>
+							
+							<td class="nobg"> 1,750</td>
+							<td class="nobg"> 5.50</td>
+							<td class="nobg"> 5.55</td>
+							<td class="nobg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1020.00"><b>1020.00</b></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 25.45</td>
+							<td class="ylwbg"> 26.95</td>
+							<td class="ylwbg"> 500</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Red;"> -24.50</td>
+							
+							
+							<td class="ylwbg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','1020.00','PE')"> 26.50</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1020.00&type=PE&expiry=25JUN2015" target="_blank"> 26.50</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg"> 25.84</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg"> 204</td>
+							<td class="ylwbg"> 20,750</td>
+						
+							<td class="ylwbg"> 22,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1020.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1040.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 360,000</td>
+							<td class="nobg"> 278,750</td>
+							<td class="nobg"> 6,692</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 27.15</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1040.00&type=CE&expiry=25JUN2015" target="_blank"> 2.15</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Green;"> 0.70</td>
+							
+							<td class="nobg"> 5,250</td>
+							<td class="nobg"> 2.05</td>
+							<td class="nobg"> 2.20</td>
+							<td class="nobg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1040.00"><b>1040.00</b></a></td>
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 40.75</td>
+							<td class="ylwbg"> 44.10</td>
+							<td class="ylwbg"> 750</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Red;"> -22.60</td>
+							
+							
+							<td class="ylwbg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','1040.00','PE')"> 42.35</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1040.00&type=PE&expiry=25JUN2015" target="_blank"> 42.35</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg"> 23.18</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg"> 62</td>
+							<td class="ylwbg"> 4,250</td>
+						
+							<td class="ylwbg"> 30,250</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1040.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1060.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 112,250</td>
+							<td class="nobg"> 66,000</td>
+							<td class="nobg"> 1,536</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 29.41</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1060.00&type=CE&expiry=25JUN2015" target="_blank"> 0.95</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Green;"> 0.05</td>
+							
+							<td class="nobg"> 12,500</td>
+							<td class="nobg"> 0.80</td>
+							<td class="nobg"> 1.40</td>
+							<td class="nobg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1060.00"><b>1060.00</b></a></td>
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 49.25</td>
+							<td class="ylwbg"> 61.30</td>
+							<td class="ylwbg"> 250</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Red;"> -71.90</td>
+							
+							
+							<td class="ylwbg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','1060.00','PE')"> 72.00</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1060.00&type=PE&expiry=25JUN2015" target="_blank"> 72.00</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg"> 62.38</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg"> 6</td>
+							<td class="ylwbg"> -1,500</td>
+						
+							<td class="ylwbg"> 5,500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1060.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1080.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 16,000</td>
+							<td class="nobg"> 14,250</td>
+							<td class="nobg"> 102</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 31.23</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1080.00&type=CE&expiry=25JUN2015" target="_blank"> 0.40</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Red;"> -0.15</td>
+							
+							<td class="nobg"> 3,750</td>
+							<td class="nobg"> 0.40</td>
+							<td class="nobg"> 0.70</td>
+							<td class="nobg"> 4,000</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1080.00"><b>1080.00</b></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 75.95</td>
+							<td class="ylwbg"> 83.25</td>
+							<td class="ylwbg"> 750</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Black;">-</td>
+							
+							
+							<td class="ylwbg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+						
+							<td class="ylwbg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1080.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1100.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 11,250</td>
+							<td class="nobg"> 11,000</td>
+							<td class="nobg"> 59</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 37.24</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1100.00&type=CE&expiry=25JUN2015" target="_blank"> 0.40</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Green;"> 0.35</td>
+							
+							<td class="nobg"> 2,000</td>
+							<td class="nobg"> 0.35</td>
+							<td class="nobg"> 0.50</td>
+							<td class="nobg"> 5,000</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1100.00"><b>1100.00</b></a></td>
+							<td class="ylwbg"> 250</td>
+							<td class="ylwbg"> 95.00</td>
+							<td class="ylwbg"> 130.90</td>
+							<td class="ylwbg"> 1,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Black;">-</td>
+							
+							
+							<td class="ylwbg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','1100.00','PE')"> 165.00</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1100.00&type=PE&expiry=25JUN2015" target="_blank"> 165.00</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+						
+							<td class="ylwbg"> 4,000</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1100.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1120.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg">-</td>
+							<!-- End-->
+							<td class="nobg">
+							
+							-
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Black;">-</td>
+							
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 0.05</td>
+							<td class="nobg"> 0.70</td>
+							<td class="nobg"> 10,000</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1120.00"><b>1120.00</b></a></td>
+							<td class="ylwbg"> 750</td>
+							<td class="ylwbg"> 114.70</td>
+							<td class="ylwbg"> 123.95</td>
+							<td class="ylwbg"> 750</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Black;">-</td>
+							
+							
+							<td class="ylwbg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+						
+							<td class="ylwbg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1120.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1140.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg">-</td>
+							<!-- End-->
+							<td class="nobg">
+							
+							-
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Black;">-</td>
+							
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg"> 1.00</td>
+							<td class="nobg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1140.00"><b>1140.00</b></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 126.40</td>
+							<td class="ylwbg"> 184.30</td>
+							<td class="ylwbg"> 1,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Black;">-</td>
+							
+							
+							<td class="ylwbg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+						
+							<td class="ylwbg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1140.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1160.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 250</td>
+							<td class="nobg"> 1</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg"> 55.66</td>
+							<!-- End-->
+							<td class="nobg">
+							
+								
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1160.00&type=CE&expiry=25JUN2015" target="_blank"> 0.50</a>
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Red;"> -0.15</td>
+							
+							<td class="nobg"> 750</td>
+							<td class="nobg"> 0.05</td>
+							<td class="nobg"> 0.50</td>
+							<td class="nobg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1160.00"><b>1160.00</b></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 145.95</td>
+							<td class="ylwbg"> 203.80</td>
+							<td class="ylwbg"> 1,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Black;">-</td>
+							
+							
+							<td class="ylwbg">
+							
+								<!-- <a href="javascript:popup1('RELIANCE','OPTSTK','25JUN2015','1160.00','PE')"> 257.95</a> -->
+
+								<a href="/live_market/dynaContent/live_watch/get_quote/GetQuoteFO.jsp?underlying=RELIANCE&instrument=OPTSTK&strike=1160.00&type=PE&expiry=25JUN2015" target="_blank"> 257.95</a>
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+						
+							<td class="ylwbg"> 500</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1160.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+									
+						<tr>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','CE')"><img src="/images/print3.gif"></a>
+	
+	</td>-->
+	 
+
+						<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1180.00','CE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<!-- Added By Swapnil IV-->
+							<td class="nobg">-</td>
+							<!-- End-->
+							<td class="nobg">
+							
+							-
+							
+							</td>
+							<!--*Net Change*-->
+							
+							<td class="nobg" Style="color:Black;">-</td>
+							
+							<td class="nobg">-</td>
+							<td class="nobg">-</td>
+							<td class="nobg"> 1.00</td>
+							<td class="nobg"> 250</td>
+							<td class="grybg"><a href="/live_market/dynaContent/live_watch/option_chain/optionDates.jsp?symbol=RELIANCE&instrument=OPTSTK&strike=1180.00"><b>1180.00</b></a></td>
+							<td class="ylwbg"> 1,000</td>
+							<td class="ylwbg"> 165.40</td>
+							<td class="ylwbg"> 223.30</td>
+							<td class="ylwbg"> 1,000</td>
+							
+							<!--*Net Change*-->
+							
+								<td class="ylwbg" Style="color:Black;">-</td>
+							
+							
+							<td class="ylwbg">
+							
+								-
+							
+							
+							
+							</td>
+							<!-- Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<!-- End Added By Swapnil -->
+							<td class="ylwbg">-</td>
+							<td class="ylwbg">-</td>
+						
+							<td class="ylwbg">-</td>
+
+							<td><a href="javascript:chartPopup('RELIANCE', 'OPTSTK', '25JUN2015', '1180.00','PE','');"><img src="/live_market/resources/images/grficon.gif" /></a></td>
+
+	<!--<td><a href="javascript:popup1('','','1')">Quote</a></td>
+	<td><a href="javascript:popup1('','','','','PE')"><img src="/images/print3.gif"></a></td>-->
+
+						</tr>
+						
+
+					</table>
+					
+				</div>
+				<br />
+				<table width="100%"><tbody><tr align="center"><td><a href="#top">Top</a></td></tr></tbody></table>
+			<!-- Main Content End -->
+			
+		 <div class="notes">
+							
+								<p class="title" style="width: 100%; padding: 3px 0; border-bottom: 1px solid #CCCCCC;color: #454444;float: left;font-size: 1.2em;">Note : 10% interest rate is applied while computing implied volatility.</p>
+							
+						 <ul class="noteul_child">
+						 <br/><br/>
+							<li style="background: none repeat scroll 0pt 0pt transparent; clear: both; float: left; font-size: 1.1em; padding: 2px 0pt 2px 12px; width: 520px;"><img align="left" src="/live_market/resources/images/blbox.gif" /> &nbsp;Highlighted options are in-the-money.</li>
+						</ul>
+					</div>
+			<!--Footer Start-->
+			<div id="footer">
+				
+			</div>
+			<!--Footer End-->
+			<div class="clear"></div>
+		</div>
+		<!--Wrapper Bottom End--> 
+	</div>
+	<!--Content Big End--> 
+</div>
+<div class="footer_nav_main">
+	<div id="footer_nav">
+		
+	</div>
+</div>
+</body>
+</html>
+
