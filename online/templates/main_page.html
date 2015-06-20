@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="text-muted">Stock: {{ stock_name_template }} </h3>
+        <h2 class="text-muted">Current Price: current_price (to update)</h3>
+        <h3 class="text-muted">Last updated:  last_updated.strftime("%H:%M:%S %d/%m/%Y") (to update) </h3>
+      </div>
+
+      <hr/>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Strike Price</th>
+            <th>Ask Price</th>
+            <th>Ask Quantity</th>
+            <th>OI</th>
+            <th>Call / Put</th>
+          </tr>
+	       </thead>
+	       <tbody>
+            {% for option in option_list %}
+            <tr>
+              <td>{{ option.strikePrice}}</td>
+              <td>{{ option.askPrice }}</td>
+              <td>{{ option.askQty }}</td>
+              <td>{{ option.oi }}</td>
+              <td> {% if option.cp=='c' %} CALL {% else %} PUT {% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </body>
+</html>
